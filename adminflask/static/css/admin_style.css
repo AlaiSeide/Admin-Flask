@@ -1,0 +1,35 @@
+/* Estilos básicos do admin */
+body {
+    background-color: #f4f4f9;
+  }
+  
+  .card {
+    transition: transform 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Tabela de administração */
+  .table {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+
+/* Estilo para botões de ação na tabela */
+.table .btn {
+    margin-right: 5px;
+  }
+  
+  /* Melhorar o estilo da tabela */
+  .table {
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Estilo para o formulário de adicionar categoria */
+  .input-group {
+    max-width: 500px;
+    margin-bottom: 20px;
+  }
+  

@@ -1,0 +1,40 @@
+{% extends "user/base_user.html" %}
+
+
+{% block title %}
+    Termos de Uso
+{% endblock %}
+
+
+{% block body %}
+
+    <div class="container py-5">
+    <h1 class="mb-4 text-center">Termos de Uso</h1>
+    <p>
+        Bem-vindo ao nosso Blog. Ao acessar e utilizar este site, você concorda em cumprir os seguintes Termos de Uso.
+    </p>
+
+    <h3>1. Uso Geral</h3>
+    <p>
+        Você concorda em usar este site apenas para fins legais e de acordo com estes Termos. O conteúdo aqui publicado é de responsabilidade de cada usuário.
+    </p>
+
+    <h3>2. Criação de Conteúdo</h3>
+    <p>
+        Ao criar postagens e comentários, você garante que possui os direitos sobre o conteúdo e que ele não infringe leis de direitos autorais.
+    </p>
+
+    <h3>3. Comentários</h3>
+    <p>
+        Comentários ofensivos ou inapropriados podem ser removidos a critério da administração do Blog.
+    </p>
+
+    <h3>4. Alterações nos Termos</h3>
+    <p>
+        Podemos alterar estes Termos a qualquer momento. É responsabilidade do usuário verificar esta página periodicamente.
+    </p>
+
+    <a href="{{ url_for('main.politica_de_privacidade') }}" class="btn btn-primary mt-4">Leia também nossa Política de Privacidade</a>
+    </div>
+    
+{% endblock %}

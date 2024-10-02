@@ -1,10 +1,14 @@
 # Primeiro, importamos coisas mágicas que nos ajudam a guardar informações.
-from adminflask import db
+from adminflask import db, loginmanager
 from datetime import datetime
+from flask_login import UserMixin
 
+@loginmanager.user_loader
+def load_user(user_id):
+    return Usuario.query.get(int(user_id))
 
 # Vamos criar um tipo de objeto chamado 'Usuario' para guardar informações dos usuários.
-class Usuario(db.Model):
+class Usuario(db.Model, UserMixin):
     # Damos um nome para nossa caixa de usuários.
     __tablename__ = 'usuarios'
 
@@ -18,13 +22,30 @@ class Usuario(db.Model):
     email = db.Column(db.String(150), unique=True, nullable=False)
 
     # Cada usuário tem uma senha secreta guardada de forma segura.
-    senha_hash = db.Column(db.String(256), nullable=False)
+    senha = db.Column(db.String(256), nullable=False)
+
+    # Campo para verificar se o usuário é admin
+    is_admin = db.Column(db.Boolean, default=False) 
 
     # Um usuário pode escrever muitos posts.
     posts = db.relationship('Post', backref='autor', lazy=True)
 
     # Um usuário pode ter muitos tokens para redefinir sua senha.
     tokens = db.relationship('TokenRedefinicao', backref='usuario', lazy=True)
+
+
+
+class Category(db.Model):
+    __tablename__ = 'categories'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False, unique=True)  # Nome da categoria
+
+    # Relacionamento com posts (assumindo que você tenha uma tabela de posts)
+    posts = db.relationship('Post', backref='category', lazy=True)
+
+    def __repr__(self):
+        return f'<Category {self.name}>'
 
 # Agora, vamos criar um tipo de objeto chamado 'Post' para guardar os posts que os usuários escrevem.
 class Post(db.Model):
@@ -45,6 +66,9 @@ class Post(db.Model):
 
     # Cada post sabe quem o escreveu.
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+
+    # ForeignKey: campo de categoria, referenciando o id da tabela Category
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
 
 # Vamos criar um tipo de objeto chamado 'TokenRedefinicao' para ajudar usuários a redefinir suas senhas.
 class TokenRedefinicao(db.Model):

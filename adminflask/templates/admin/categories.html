@@ -1,0 +1,45 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<div class="container">
+  <h1 class="mb-4">Gerenciar Categorias</h1>
+
+  <!-- Formulário para adicionar nova categoria -->
+  <div class="mb-4">
+    <h4>Adicionar Nova Categoria</h4>
+    <form action="{{ url_for('admin.add_category') }}" method="POST">
+      <div class="input-group">
+        <input type="text" class="form-control" name="category_name" placeholder="Nome da Categoria" required>
+        <button class="btn btn-success" type="submit">Adicionar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tabela com as categorias existentes -->
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nome da Categoria</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in categories %}
+        <tr>
+          <td>{{ category.id }}</td>
+          <td>{{ category.name }}</td>
+          <td>
+            <!-- Botão para editar a categoria -->
+            <a href="{{ url_for('admin.edit_category', category_id=category.id) }}" class="btn btn-warning btn-sm">Editar</a>
+            <!-- Botão para excluir a categoria -->
+            <a href="{{ url_for('admin.delete_category', category_id=category.id) }}" class="btn btn-danger btn-sm">Excluir</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

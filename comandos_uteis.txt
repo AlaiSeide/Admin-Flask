@@ -1,0 +1,11 @@
+Ver todas as bibliotecas instaladas no seu ambiente Python usando o pip, você pode usar o seguinte comando:
+
+    - pip list
+
+Isso vai criar um arquivo chamado requirements.txt com todas as bibliotecas e versões instaladas, o que é útil para recriar o ambiente em outro lugar.
+
+    - pip freeze > requirements.txt
+
+Se você quiser instalar todas as bibliotecas listadas em um arquivo como o requirements.txt, pode usar o comando:
+
+    - pip install -r requirements.txt

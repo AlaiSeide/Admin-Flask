@@ -1,0 +1,39 @@
+{% extends "user/base_user.html" %}
+
+
+{% block title %}
+    Política de privacidade
+{% endblock %}
+
+
+{% block body %}
+    <div class="container py-5">
+    <h1 class="mb-4 text-center">Política de Privacidade</h1>
+    <p>
+        Sua privacidade é importante para nós. Esta Política de Privacidade descreve como coletamos, usamos e protegemos suas informações pessoais.
+    </p>
+
+    <h3>1. Coleta de Informações</h3>
+    <p>
+        Podemos coletar informações pessoais como nome, e-mail, e dados de navegação ao usar o site.
+    </p>
+
+    <h3>2. Uso das Informações</h3>
+    <p>
+        As informações coletadas são usadas para melhorar a experiência no site, enviar notificações de novos posts e responder a consultas.
+    </p>
+
+    <h3>3. Compartilhamento de Informações</h3>
+    <p>
+        Não compartilhamos suas informações com terceiros, exceto quando exigido por lei.
+    </p>
+
+    <h3>4. Segurança</h3>
+    <p>
+        Utilizamos medidas de segurança para proteger suas informações, mas não podemos garantir 100% de segurança.
+    </p>
+
+    <a href="{{ url_for('main.termos_de_uso') }}" class="btn btn-primary mt-4">Leia também nossos Termos de Uso</a>
+    </div>
+
+{% endblock %}
