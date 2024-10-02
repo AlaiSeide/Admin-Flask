@@ -21,3 +21,9 @@ class FormLogin(FlaskForm):
     email = StringField('Endereço de Email', validators=[DataRequired(), Email()])
     senha = PasswordField('Senha', validators=[DataRequired(), Length(6, 20)])
     botao_fazer_login = SubmitField('Login')
+
+
+class AdminLogin(FlaskForm):
+    email = StringField('Endereço de Email', validators=[DataRequired(), Email()])
+    senha = PasswordField('Senha', validators=[DataRequired(), Length(6, 20)])
+    botao_fazer_login = SubmitField('Login')

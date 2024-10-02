@@ -7,7 +7,6 @@ from adminflask import db, bcrypt
 
 
 
-
 main = Blueprint('main', __name__)
 
 @main.route('/', methods=['GET', 'POST'])
@@ -59,7 +58,7 @@ def logout():
     logout_user()
     flash('Logout feito com sucesso', 'alert-success')
     return redirect(url_for('main.homepage'))
-    
+
 @main.route('/termos-de-uso')
 def termos_de_uso():
     return render_template('user/termos_de_uso.html')
