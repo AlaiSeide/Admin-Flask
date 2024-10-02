@@ -11,7 +11,9 @@ app = Flask(__name__)
 # para se conectar ao banco mysql remotamente precisamos dessa biblioteca encima.
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://alaiseide:2040Amor..@{server}/Admin'
 app.config['SECRET_KEY'] = '840966b21520d9cc13a2df0ae47f4bec'
-app.config['UPLOAD_FOLDER'] = 'static/images'
+# Diretório onde as fotos de perfil serão armazenadas
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images', 'perfis')
+# app.config['UPLOAD_FOLDER'] = 'static/images'
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)

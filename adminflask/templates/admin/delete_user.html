@@ -1,0 +1,33 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h2 class="card-title">Excluir Usuário</h2>
+                </div>
+                <div class="card-body">
+                    <p>Tem certeza de que deseja excluir o usuário <strong>{{ user.nome }}</strong>? Esta ação não pode ser desfeita.</p>
+
+                    <!-- Formulário de exclusão -->
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="form-check mb-3">
+                            {{ form.confirmar(class="form-check-input") }}
+                            <label class="form-check-label" for="confirmar">Confirmo que desejo excluir o usuário</label>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-danger btn-block") }}
+                            <a href="{{ url_for('admin.admin_users') }}" class="btn btn-secondary btn-block">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

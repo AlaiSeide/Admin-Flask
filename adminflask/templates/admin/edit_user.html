@@ -1,0 +1,38 @@
+{% extends "admin/base_admin.html" %}
+
+
+{% block content %}
+    <h1>Editar Usuário: {{ user.nome }}</h1>
+    
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        
+        <div>
+            {{ form.nome.label }}
+            {{ form.nome(class="form-control") }}
+        </div>
+        
+        <div>
+            {{ form.email.label }}
+            {{ form.email(class="form-control") }}
+        </div>
+
+        <!-- Campo de senha -->
+        <div>
+            {{ form.senha.label }}
+            {{ form.senha(class="form-control") }}
+        </div>
+        
+        <div>
+            {{ form.is_admin.label }}
+            {{ form.is_admin() }}
+        </div>
+
+        <div>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    <a href="{{ url_for('admin.admin_users') }}">Voltar para a lista de usuários</a>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h2 class="card-title">Criar Novo Usuário</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Formulário de criação de novo usuário -->
+                    <form method="POST" action="">
+                        {{ form.csrf_token }}
+                        
+                        <div class="mb-3">
+                            {{ form.nome.label(class="form-label") }}
+                            {{ form.nome(class="form-control") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control") }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form.senha.label(class="form-label") }}
+                            {{ form.senha(class="form-control") }}
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            {{ form.is_admin(class="form-check-input") }}
+                            <label class="form-check-label" for="is_admin">Administrador?</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-success btn-block") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

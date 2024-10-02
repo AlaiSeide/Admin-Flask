@@ -24,6 +24,10 @@ class Usuario(db.Model, UserMixin):
     # Cada usuário tem uma senha secreta guardada de forma segura.
     senha = db.Column(db.String(256), nullable=False)
 
+    foto_perfil = db.Column(db.String(150), nullable=True, default='default.png')  # Imagem de perfil
+    is_active_user = db.Column(db.Boolean, default=True)
+    def is_active(self):
+        return self.is_active_user
     # Campo para verificar se o usuário é admin
     is_admin = db.Column(db.Boolean, default=False) 
 

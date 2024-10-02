@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
-from wtforms.validators import DataRequired, EqualTo, Length, Email, ValidationError
+from flask_wtf.file import FileField, FileAllowed
+from wtforms.validators import DataRequired, EqualTo, Length, Email, ValidationError, Optional
 from adminflask.models import Usuario
 
 class FormCriarConta(FlaskForm):
@@ -15,8 +16,6 @@ class FormCriarConta(FlaskForm):
         if usuario:
             raise ValidationError('E-mail ja cadastrado. Cadastre-se com outro e-mail ou faca login para continuar')
 
-
-
 class FormLogin(FlaskForm):
     email = StringField('Endereço de Email', validators=[DataRequired(), Email()])
     senha = PasswordField('Senha', validators=[DataRequired(), Length(6, 20)])
@@ -27,3 +26,29 @@ class AdminLogin(FlaskForm):
     email = StringField('Endereço de Email', validators=[DataRequired(), Email()])
     senha = PasswordField('Senha', validators=[DataRequired(), Length(6, 20)])
     botao_fazer_login = SubmitField('Login')
+
+
+class EditUserForm(FlaskForm):
+    nome = StringField('Nome', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    is_admin = BooleanField('É administrador?')
+    senha = PasswordField('Senha (somente para mudar sua própria senha)', validators=[Optional()])  # Campo opcional para editar senha
+    submit = SubmitField('Atualizar')
+
+class ConfirmDeleteForm(FlaskForm):
+    confirmar = BooleanField('Você tem certeza que deseja excluir este usuário?', validators=[DataRequired()])
+    submit = SubmitField('Excluir')   
+
+class CreateUserForm(FlaskForm):
+    nome = StringField('Nome', validators=[DataRequired(), Length(min=2, max=150)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    senha = PasswordField('Senha', validators=[DataRequired(), Length(min=6)])
+    is_admin = BooleanField('Administrador?')
+    submit = SubmitField('Criar Usuário')   
+
+class AdminProfileForm(FlaskForm):
+    nome = StringField('Nome', validators=[DataRequired(), Length(min=2, max=150)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    senha = PasswordField('Nova Senha (opcional)', validators=[Optional(), Length(min=6)])
+    foto_perfil = FileField('Atualizar Foto de Perfil', validators=[Optional(), FileAllowed(['jpg', 'png'], 'Apenas imagens JPG ou PNG!')])
+    submit = SubmitField('Atualizar Perfil')
