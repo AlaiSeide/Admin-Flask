@@ -1,0 +1,41 @@
+{% extends "admin/base_admin.html" %}
+
+
+{% block content %}
+
+    <title>Cadastrar Curso</title>
+
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2>Cadastrar Novo Curso</h2>
+                    </div>
+                    <div class="card-body">
+                        <!-- Formulário de cadastro de curso -->
+                        <form method="POST" action="">
+                            {{ form.hidden_tag() }}
+
+                            <div class="mb-3">
+                                {{ form.nome.label(class="form-label") }}
+                                {{ form.nome(class="form-control") }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form.descricao.label(class="form-label") }}
+                                {{ form.descricao(class="form-control") }}
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                {{ form.submit(class="btn btn-primary btn-block") }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

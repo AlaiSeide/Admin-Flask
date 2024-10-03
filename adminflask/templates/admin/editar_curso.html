@@ -1,0 +1,40 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<div class="container">
+  <h1 class="mb-4">Editar Curso: {{ curso.nome }}</h1>
+  
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-warning text-white">
+          <h2>Editar Curso</h2>
+        </div>
+        <div class="card-body">
+          <!-- Formulário de edição de curso -->
+          <form method="POST" action="">
+            {{ form.hidden_tag() }}
+
+            <!-- Campo Nome do Curso -->
+            <div class="mb-3">
+              {{ form.nome.label(class="form-label") }}
+              {{ form.nome(class="form-control") }}
+            </div>
+
+            <!-- Campo Descrição do Curso -->
+            <div class="mb-3">
+              {{ form.descricao.label(class="form-label") }}
+              {{ form.descricao(class="form-control") }}
+            </div>
+
+            <!-- Botão de Atualização -->
+            <div class="d-grid gap-2">
+              {{ form.submit(class="btn btn-warning btn-block") }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

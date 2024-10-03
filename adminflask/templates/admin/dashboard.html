@@ -4,6 +4,8 @@
 <div class="container">
   <h1 class="mb-4">Painel Administrativo</h1>
   <div class="row">
+
+    <!--Usuarios-->
     <div class="col-lg-4 col-md-6">
       <div class="card">
         <div class="card-body text-center">
@@ -13,6 +15,8 @@
         </div>
       </div>
     </div>
+
+    <!--Post-->
     <div class="col-lg-4 col-md-6">
       <div class="card">
         <div class="card-body text-center">
@@ -22,6 +26,8 @@
         </div>
       </div>
     </div>
+
+    <!--Categorias-->
     <div class="col-lg-4 col-md-6">
       <div class="card">
         <div class="card-body text-center">
@@ -31,6 +37,19 @@
         </div>
       </div>
     </div>
+
+     <!-- Gerenciar Cursos (Seção Nova) -->
+     <div class="col-lg-4 col-md-6">
+      <div class="card">
+        <div class="card-body text-center">
+          <h5 class="card-title">Cursos</h5>
+          <p class="card-text">Gerencie os cursos oferecidos no site.</p>
+          <a href="{{ url_for('admin.admin_cursos') }}" class="btn btn-primary">Gerenciar Cursos</a>
+        </div>
+      </div>
+    </div>
+
+    
   </div>
 </div>
 {% endblock %}

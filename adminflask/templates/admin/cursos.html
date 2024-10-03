@@ -1,0 +1,23 @@
+{% extends "admin/base_admin.html" %}
+
+{% block content %}
+<div class="container">
+  <h1 class="mb-4">Gerenciar Cursos</h1>
+  <a href="{{ url_for('admin.admin_cadastrar_curso') }}" class="btn btn-success mb-3">Cadastrar Novo Curso</a>
+  
+  <div class="row">
+    {% for curso in cursos %}
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ curso.nome }}</h5>
+          <p class="card-text">{{ curso.descricao }}</p>
+          <a href="{{ url_for('admin.editar_curso', curso_id=curso.id) }}" class="btn btn-warning btn-sm">Editar</a>
+          <a href="{{ url_for('admin.deletar_curso', curso_id=curso.id) }}" class="btn btn-danger btn-sm">Excluir</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

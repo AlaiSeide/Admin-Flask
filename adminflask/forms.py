@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectField
 from flask_wtf.file import FileField, FileAllowed
 from wtforms.validators import DataRequired, EqualTo, Length, Email, ValidationError, Optional
 from adminflask.models import Usuario
@@ -52,3 +52,14 @@ class AdminProfileForm(FlaskForm):
     senha = PasswordField('Nova Senha (opcional)', validators=[Optional(), Length(min=6)])
     foto_perfil = FileField('Atualizar Foto de Perfil', validators=[Optional(), FileAllowed(['jpg', 'png'], 'Apenas imagens JPG ou PNG!')])
     submit = SubmitField('Atualizar Perfil')
+
+class CursoForm(FlaskForm):
+    nome = StringField('Nome do Curso', validators=[DataRequired(), Length(min=5, max=200)])
+    descricao = TextAreaField('Descrição', validators=[DataRequired(), Length(min=10)])
+    submit = SubmitField('Cadastrar Curso')
+
+class PostForm(FlaskForm):
+    titulo = StringField('Título', validators=[DataRequired(), Length(min=5, max=200)])
+    conteudo = TextAreaField('Conteúdo', validators=[DataRequired()])
+    category = SelectField('Categoria', coerce=int)  # Vamos preencher as opções no back-end
+    submit = SubmitField('Salvar Post')

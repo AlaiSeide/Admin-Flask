@@ -1,0 +1,42 @@
+<!--
+    Uma funcao recebe o campo de formulario, para usar em vez de voce passar so um campo voce usa o assim, 
+ 
+
+  {#  {{ macros.campo_senha(form.senha) }} #}
+ -->
+
+
+
+ {% macro campo_senha(field) %}
+
+    <label for="{{ field.id }}" class="form-label">{{ field.label }}</label>
+    <div class="input-group">
+        {{ field(class="form-control", placeholder="Sua senha") }}
+        <span class="input-group-text toggle-password" data-target="{{ field.id }}" style="cursor: pointer;">
+            <i class="fa fa-eye"></i>
+        </span>
+    </div>
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var toggles = document.querySelectorAll('.toggle-password');
+            toggles.forEach(function(toggle) {
+                toggle.addEventListener('click', function () {
+                    var campoSenha = document.getElementById(this.getAttribute('data-target'));
+                    var icone = this.querySelector('i');
+                    if (campoSenha.type === 'password') {
+                        campoSenha.type = 'text';
+                        icone.classList.remove('fa-eye');
+                        icone.classList.add('fa-eye-slash');
+                    } else {
+                        campoSenha.type = 'password';
+                        icone.classList.remove('fa-eye-slash');
+                        icone.classList.add('fa-eye');
+                    }
+                });
+            });
+        });
+    </script>
+ {% endmacro %}
+ 

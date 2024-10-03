@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
-from adminflask.forms import AdminLogin, EditUserForm, ConfirmDeleteForm, CreateUserForm, AdminProfileForm
-from adminflask.models import Category, Usuario
+from adminflask.forms import AdminLogin, EditUserForm, ConfirmDeleteForm, CreateUserForm, AdminProfileForm, CursoForm
+from adminflask.models import Category, Usuario, Curso
 from adminflask import db, bcrypt, loginmanager
 from adminflask.admin.utils import admin_required, salvar_foto_perfil
 admin = Blueprint('admin', __name__)
@@ -250,3 +250,52 @@ def delete_category(category_id):
     db.session.commit()
     flash('Categoria excluída com sucesso!', 'alert-success')
     return redirect(url_for('admin.admin_categories'))
+
+# cursos
+
+@admin.route('/cursos')
+@admin_required
+def admin_cursos():
+    # Busca todos os cursos cadastrados
+    cursos = Curso.query.all()
+    return render_template('admin/cursos.html', cursos=cursos)
+
+@admin.route('/cursos/cadastrar', methods=['GET', 'POST'])
+@admin_required
+def admin_cadastrar_curso():
+    form = CursoForm()
+    if form.validate_on_submit():
+        # Cria um novo curso com os dados do formulário
+        novo_curso = Curso(nome=form.nome.data, descricao=form.descricao.data)
+        db.session.add(novo_curso)  # Adiciona o curso no banco de dados
+        db.session.commit()  # Salva a transação
+        flash(f'Curso "{novo_curso.nome}" cadastrado com sucesso!', 'alert-success')
+        return redirect(url_for('admin.admin_dashboard'))  # Redireciona para o dashboard ou outra página
+    return render_template('admin/cadastrar_curso.html', form=form)
+
+@admin.route('/cursos/<int:curso_id>/editar', methods=['GET', 'POST'])
+@admin_required
+def editar_curso(curso_id):
+    curso = Curso.query.get_or_404(curso_id)
+    form = CursoForm()
+
+    if form.validate_on_submit():
+        curso.nome = form.nome.data
+        curso.descricao = form.descricao.data
+        db.session.commit()
+        flash(f'Curso "{curso.nome}" atualizado com sucesso.', 'alert-success')
+        return redirect(url_for('admin.admin_cursos'))
+
+    form.nome.data = curso.nome
+    form.descricao.data = curso.descricao
+    return render_template('admin/editar_curso.html', form=form, curso=curso)
+
+@admin.route('/cursos/<int:curso_id>/deletar', methods=['POST'])
+@admin_required
+def deletar_curso(curso_id):
+    curso = Curso.query.get_or_404(curso_id)
+    db.session.delete(curso)
+    db.session.commit()
+    flash(f'Curso "{curso.nome}" excluído com sucesso.', 'alert-success')
+    return redirect(url_for('admin.admin_cursos'))
+

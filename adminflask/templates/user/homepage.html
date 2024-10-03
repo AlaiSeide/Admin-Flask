@@ -1,11 +1,50 @@
 {% extends "user/base_user.html" %}
 
-
 {% block title %}
     HomePage
 {% endblock %}
 
-
 {% block body %}
-<h1>Bem Vindo HomePage</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Bem-vindo ao Nosso Blog e Plataforma de Cursos</h1>
+
+    <!-- Seção de Posts -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-3">Últimos Posts</h2>
+        </div>
+        {% for post in posts %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.titulo }}</h5>
+                    <p class="card-text">{{ post.conteudo[:150] }}...</p>  <!-- Exibe um resumo do post -->
+                    <a href="{{ url_for('main.ver_post', post_id=post.id) }}" class="btn btn-primary">Ler Mais</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Publicado por {{ post.autor.nome }} em {{ post.data_criacao.strftime('%d/%m/%Y') }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Seção de Cursos -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="text-center mb-3">Cursos Disponíveis</h2>
+        </div>
+        {% for curso in cursos %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ curso.nome }}</h5>
+                    <p class="card-text">{{ curso.descricao[:150] }}...</p>  <!-- Exibe um resumo do curso -->
+                    <a href="{# {{ url_for('main.ver_curso', curso_id=curso.id) }} #}" class="btn btn-success">Acessar Curso</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}

@@ -1,4 +1,6 @@
 {% extends "admin/base_admin.html" %}
+{% import "admin/macros.html" as macros %}
+
 <!--<title>Login Administrativo</title>-->
 
 {% block content %}
@@ -7,21 +9,23 @@
   <div class="login-container">
     <div class="card">
       <div class="card-body">
-        <h3 class="text-center mb-4">Login Administrativo</h3>
+        <h3 class="text-center mb-4">Admin</h3>
 
         <form action="{{ url_for('admin.admin_login', next_admin=request.args.get('next_admin')) }}" method="POST">
           {{ form.csrf_token }}
 
+          <!--Email-->
           <div data-mdb-input-init class="form-outline mb-4">
-              {{ form.email(class="form-control form-control-lg") }}
+              {{ form.email(class="form-control", placeholder="Seu email") }}
               {{ form.email.label(class="form-label" ) }}
           </div>
 
+           <!--Senha-->
           <div data-mdb-input-init class="form-outline mb-4">
-              {{ form.senha(class="form-control form-control-lg") }}
-              {{ form.senha.label(class="form-label" ) }}
+              {{ macros.campo_senha(form.senha) }}
           </div>
 
+           <!--Btn-->
           <div class="pt-1 mb-4">
             {{ form.botao_fazer_login(class="btn btn-dark btn-lg btn-block") }}
           </div>
