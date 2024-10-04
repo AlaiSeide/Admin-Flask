@@ -1,0 +1,29 @@
+{% extends "post/base_post.html" %}
+
+{% block title %}
+    Adicionar Post
+{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Adicionar Novo Post</h1>
+    <form method="POST" action="">
+        {{ form.csrf_token }}
+        <div class="mb-3">
+            {{ form.titulo.label(class="form-label") }}
+            {{ form.titulo(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.conteudo.label(class="form-label") }}
+            {{ form.conteudo(class="form-control") }}
+        </div>
+        <div class="mb-3">
+            {{ form.category.label(class="form-label") }}
+            {{ form.category(class="form-control") }}
+        </div>
+        <button type="submit" class="btn btn-primary">Criar Post</button>
+    </form>
+</div>
+
+{% endblock %}

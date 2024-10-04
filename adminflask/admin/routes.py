@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
-from adminflask.forms import AdminLogin, EditUserForm, ConfirmDeleteForm, CreateUserForm, AdminProfileForm, CursoForm
-from adminflask.models import Category, Usuario, Curso
+from adminflask.forms import AdminLogin, EditUserForm, ConfirmDeleteForm, CreateUserForm, AdminProfileForm, CursoForm, PostForm
+from adminflask.models import Category, Usuario, Curso, Post
 from adminflask import db, bcrypt, loginmanager
 from adminflask.admin.utils import admin_required, salvar_foto_perfil
 admin = Blueprint('admin', __name__)
@@ -36,7 +36,6 @@ def admin_logout():
     logout_user()
     flash('Logout feito com sucesso', 'alert-success')
     return redirect(url_for('admin.admin_login'))
-
 
 @admin.route('/dashboard')
 @admin_required
@@ -75,6 +74,7 @@ def admin_profile():
 
     return render_template('admin/profile.html', form=form)
 
+# Users
 # Associa a rota '/users' ao blueprint 'admin'
 @admin.route('/users')
 # Aplica o decorador 'admin_required' para garantir que apenas administradores possam acessar a rota
@@ -201,16 +201,53 @@ def delete_user(user_id):
     return render_template('admin/delete_user.html', form=form, user=user)
 
 
-# posts
+
+# Posts
+@admin.route('/posts')
 @admin.route('/posts')
 @admin_required
 def admin_posts():
-    # Aqui você puxaria a lista de posts do banco de dados
-    posts = []  # Exemplo
+    # Busca todos os posts do banco de dados
+    posts = Post.query.all()
+    # Passa os posts para o template
     return render_template('admin/posts.html', posts=posts)
 
+@admin.route('/posts/<int:post_id>/editar', methods=['GET', 'POST'])
+@admin_required
+def editar_post(post_id):
+    post = Post.query.get_or_404(post_id)
+     # Verifica se o post pertence ao administrador logado
+    if post.usuario_id != current_user.id:
+        flash('Você não tem permissão para editar este post.', 'alert-danger')
+        return redirect(url_for('admin.admin_posts'))
+        
+    form = PostForm()
+     # Buscar todas as categorias do banco de dados
+    form.category.choices = [(categoria.id, categoria.name) for categoria in Category.query.all()]
+    if form.validate_on_submit():
+        post.titulo = form.titulo.data
+        post.conteudo = form.conteudo.data
+        post.category_id = form.category.data
+        db.session.commit()
+        flash('Post atualizado com sucesso!', 'alert-success')
+        return redirect(url_for('admin.admin_posts'))
 
-# Exibir página de gerenciamento de categorias
+    form.titulo.data = post.titulo
+    form.conteudo.data = post.conteudo
+    form.category.data = post.category_id
+    return render_template('admin/editar_post.html', form=form, post=post)
+
+@admin.route('/posts/<int:post_id>/excluir', methods=['POST'])
+@admin_required
+def excluir_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Post excluído com sucesso!', 'alert-success')
+    return redirect(url_for('admin.admin_posts'))
+
+
+# Categorias
 @admin.route('/categories')
 @admin_required
 def admin_categories():
@@ -251,8 +288,8 @@ def delete_category(category_id):
     flash('Categoria excluída com sucesso!', 'alert-success')
     return redirect(url_for('admin.admin_categories'))
 
-# cursos
 
+# cursos
 @admin.route('/cursos')
 @admin_required
 def admin_cursos():

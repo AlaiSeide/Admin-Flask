@@ -16,6 +16,7 @@ app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images', 'p
 # app.config['UPLOAD_FOLDER'] = 'static/images'
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 loginmanager = LoginManager(app)
 loginmanager.login_message = 'Faça login para acessar esta página, por favor'
@@ -23,9 +24,7 @@ loginmanager.login_message_category = 'alert-info'
 
 #Se o usuário não estiver autenticado e estiver tentando acessar a área de admin, o login_manager.login_view é configurado para admin.admin_login, redirecionando para a página de login de administradores.
 #Caso contrário, o login_manager.login_view é configurado de volta para o login de usuários normais (usuarios.login).
-
 # Função para redirecionar para o login de admin, se necessário
-
 # Verificação de login para admin e usuários normais
 @app.before_request
 def verificar_login():

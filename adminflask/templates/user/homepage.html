@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ post.titulo }}</h5>
                     <p class="card-text">{{ post.conteudo[:150] }}...</p>  <!-- Exibe um resumo do post -->
-                    <a href="{{ url_for('main.ver_post', post_id=post.id) }}" class="btn btn-primary">Ler Mais</a>
+                    <a href="{{ url_for('post.detalhes_post', post_id=post.id) }}" class="btn btn-primary">Ler Mais</a>
                 </div>
                 <div class="card-footer text-muted">
                     Publicado por {{ post.autor.nome }} em {{ post.data_criacao.strftime('%d/%m/%Y') }}

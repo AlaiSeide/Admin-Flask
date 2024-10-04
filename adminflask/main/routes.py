@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, redirect, flash, request
 from flask_login import login_user, current_user, login_required, logout_user
 
-from adminflask.forms import FormCriarConta, FormLogin, PostForm
+from adminflask.forms import FormCriarConta, FormLogin
 from adminflask.models import Usuario, Curso, Post
 from adminflask import db, bcrypt
 
@@ -72,66 +72,9 @@ def politica_de_privacidade():
 @login_required
 def homepage():
     curso = Curso.query.all()
-    return render_template('user/homepage.html', cursos=curso)
-
-@main.route('/posts/')
-@login_required
-def ver_post(post_id):
     post = Post.query.all()
-    return render_template('user/ver_post.html', post=post)
+    return render_template('user/homepage.html', cursos=curso, posts=post)
 
-@main.route('/posts/adicionar', methods=['GET', 'POST'])
-@login_required
-def adicionar_post():
-    form = PostForm()
-    if form.validate_on_submit():
-        # Cria um novo post com os dados do formulário e o usuário logado como autor
-        novo_post = Post(titulo=form.titulo.data, conteudo=form.conteudo.data, usuario_id=current_user.id, category_id=form.category.data)
-        db.session.add(novo_post)
-        db.session.commit()
-        flash('Seu post foi criado com sucesso!', 'alert-success')
-        return redirect(url_for('main.ver_post', post_id=novo_post.id))
-    
-    return render_template('user/adicionar_post.html', form=form)
-
-@main.route('/posts/<int:post_id>/editar', methods=['GET', 'POST'])
-@login_required
-def editar_post(post_id):
-    post = Post.query.get_or_404(post_id)
-    
-    # Verifica se o usuário logado é o autor do post
-    if post.usuario_id != current_user.id:
-        flash('Você não tem permissão para editar este post.', 'alert-danger')
-        return redirect(url_for('main.ver_post', post_id=post.id))
-    
-    form = PostForm()
-    if form.validate_on_submit():
-        post.titulo = form.titulo.data
-        post.conteudo = form.conteudo.data
-        post.category_id = form.category.data
-        db.session.commit()
-        flash('Seu post foi atualizado com sucesso!', 'alert-success')
-        return redirect(url_for('main.ver_post', post_id=post.id))
-    
-    form.titulo.data = post.titulo
-    form.conteudo.data = post.conteudo
-    form.category.data = post.category_id
-    return render_template('user/editar_post.html', form=form, post=post)
-
-@main.route('/posts/<int:post_id>/excluir', methods=['POST'])
-@login_required
-def excluir_post(post_id):
-    post = Post.query.get_or_404(post_id)
-    
-    # Verifica se o usuário logado é o autor do post
-    if post.usuario_id != current_user.id:
-        flash('Você não tem permissão para excluir este post.', 'alert-danger')
-        return redirect(url_for('main.ver_post', post_id=post.id))
-    
-    db.session.delete(post)
-    db.session.commit()
-    flash('Seu post foi excluído com sucesso!', 'alert-success')
-    return redirect(url_for('main.homepage'))
 
 
 # cursos

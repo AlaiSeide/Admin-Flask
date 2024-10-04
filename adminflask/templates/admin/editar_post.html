@@ -1,0 +1,50 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}
+    Editar Post - {{ post.titulo }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Editar Post</h1>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h2>Editar Post</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Formulário de edição de post -->
+                    <form method="POST" action="">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Campo Título -->
+                        <div class="mb-3">
+                            {{ form.titulo.label(class="form-label") }}
+                            {{ form.titulo(class="form-control") }}
+                        </div>
+                        
+                        <!-- Campo Conteúdo -->
+                        <div class="mb-3">
+                            {{ form.conteudo.label(class="form-label") }}
+                            {{ form.conteudo(class="form-control") }}
+                        </div>
+
+                        <!-- Campo Categoria -->
+                        <div class="mb-3">
+                            {{ form.category.label(class="form-label") }}
+                            {{ form.category(class="form-control") }}
+                        </div>
+                        
+                        <!-- Botão de Atualização -->
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-warning btn-block") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
