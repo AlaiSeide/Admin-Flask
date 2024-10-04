@@ -37,6 +37,30 @@ class Usuario(db.Model, UserMixin):
     # Um usuário pode ter muitos tokens para redefinir sua senha.
     tokens = db.relationship('TokenRedefinicao', backref='usuario', lazy=True)
 
+class LogAcao(db.Model):
+    __tablename__ = 'logs_acoes'
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)  # ID do usuário que realizou a ação
+    entidade = db.Column(db.String(50), nullable=False)  # Tipo de entidade: 'post', 'usuario', etc.
+    entidade_id = db.Column(db.Integer, nullable=True)  # ID da entidade que sofreu a ação (pode ser nulo)
+    acao = db.Column(db.String(50), nullable=False)  # Tipo de ação: 'editar', 'excluir', 'criar', 'suspender'
+    data_acao = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Data e hora da ação
+    descricao = db.Column(db.String(255), nullable=True)  # Descrição adicional da ação (opcional)
+
+    def __repr__(self):
+        return f'<LogAcao {self.id} - Usuário {self.usuario_id} - {self.acao} {self.entidade} {self.entidade_id}>'
+
+
+class Mensagem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    conteudo = db.Column(db.Text, nullable=False)  # Conteúdo da mensagem
+    data_envio = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Data de envio
+    remetente_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)  # ID de quem enviou (admin ou usuário)
+    destinatario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)  # ID de quem recebeu a mensagem (admin ou usuário)
+    sala = db.Column(db.String(100), nullable=False)  # Sala da mensagem, com base no ID do usuário ou 'admin'
+
+    remetente = db.relationship('Usuario', foreign_keys=[remetente_id])  # Relacionamento com o usuário remetente
+    destinatario = db.relationship('Usuario', foreign_keys=[destinatario_id])  # Relacionamento com o usuário destinatário
 
 
 class Category(db.Model):

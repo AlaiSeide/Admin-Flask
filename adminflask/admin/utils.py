@@ -5,6 +5,9 @@ from werkzeug.utils import secure_filename
 import os
 from adminflask import app
 import secrets
+from adminflask import db
+from adminflask.models import LogAcao
+
 
 # Simplicidade nas rotas: Você só precisa usar @admin_required nas rotas de administrador.
 # Consistência: Garante que todas as rotas que exigem acesso de administrador também verifiquem a autenticação.
@@ -38,3 +41,14 @@ def salvar_foto_perfil(foto):
     except Exception as e:
         print(f"Erro ao salvar a imagem: {e}")
     return nome_arquivo
+
+def registrar_log(usuario_id, entidade, entidade_id, acao, descricao=None):
+    log = LogAcao(
+        usuario_id=usuario_id,
+        entidade=entidade,
+        entidade_id=entidade_id,
+        acao=acao,
+        descricao=descricao
+    )
+    db.session.add(log)
+    db.session.commit()

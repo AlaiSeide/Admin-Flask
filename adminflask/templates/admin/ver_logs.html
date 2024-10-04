@@ -1,0 +1,44 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}
+    Logs de Ações
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Logs de Ações</h1>
+    
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Usuário ID</th>
+                        <th>Entidade</th>
+                        <th>Entidade ID</th>
+                        <th>Ação</th>
+                        <th>Data</th>
+                        <th>Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.usuario_id }}</td>
+                        <td>{{ log.entidade }}</td>
+                        <td>{{ log.entidade_id }}</td>
+                        <td>{{ log.acao }}</td>
+                        <td>{{ log.data_acao.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+                        <td>{{ log.descricao }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Nenhum log encontrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

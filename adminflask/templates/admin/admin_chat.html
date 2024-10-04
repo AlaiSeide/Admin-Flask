@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Admin</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+</head>
+<body>
+    <h1>Conversa com Usuários</h1>
+    <div id="mensagens">
+        <!-- Mensagens anteriores do banco de dados -->
+        {% for msg in mensagens %}
+        <p><strong>{{ msg.remetente.nome }}:</strong> {{ msg.conteudo }} <small>({{ msg.data_envio.strftime('%d/%m/%Y %H:%M') }})</small></p>
+        {% endfor %}
+    </div>
+
+    <form id="chat-form">
+        <input type="text" id="mensagem" placeholder="Digite sua mensagem" required autocomplete="off">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+
+        // Enviar mensagem para o usuário
+        document.getElementById('chat-form').onsubmit = function(e) {
+            e.preventDefault();
+            var mensagem = document.getElementById('mensagem').value;
+            var sala = prompt('Digite o ID do usuário para quem você quer enviar a mensagem:');
+            socket.emit('mensagem_enviada', {msg: mensagem, room: sala});
+            document.getElementById('mensagem').value = '';
+        };
+
+        // Receber mensagem
+        socket.on('mensagem_recebida', function(data) {
+            var mensagens = document.getElementById('mensagens');
+            mensagens.innerHTML += '<p><strong>' + data.user + ':</strong> ' + data.msg + '</p>';
+        });
+    </script>
+</body>
+</html>

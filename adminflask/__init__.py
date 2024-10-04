@@ -1,7 +1,9 @@
-from flask import Flask, request
+from flask import Flask, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager, current_user
+from flask_login import LoginManager, current_user, logout_user
+from flask_socketio import SocketIO  # Certifique-se de importar o SocketIO aqui
+
 import os
 
 server = '192.168.178.4'
@@ -16,11 +18,13 @@ app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images', 'p
 # app.config['UPLOAD_FOLDER'] = 'static/images'
 
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 loginmanager = LoginManager(app)
 loginmanager.login_message = 'Faça login para acessar esta página, por favor'
 loginmanager.login_message_category = 'alert-info'
+# Inicialize o SocketIO
+socketio = SocketIO(app)
+
 
 #Se o usuário não estiver autenticado e estiver tentando acessar a área de admin, o login_manager.login_view é configurado para admin.admin_login, redirecionando para a página de login de administradores.
 #Caso contrário, o login_manager.login_view é configurado de volta para o login de usuários normais (usuarios.login).
@@ -37,6 +41,21 @@ def verificar_login():
             # Senão, redireciona para o login de usuários normais
             loginmanager.login_view = 'main.login'
 
+
+# Usando o @before_request, você garante que os usuários suspensos sejam imediatamente desconectados ao tentar acessar qualquer parte do sistema. Dessa forma, a suspensão é aplicada de forma imediata e eficaz.
+# Função que verifica o status do usuário em cada requisição
+@app.before_request
+def verificar_status_usuario():
+    # Verifica se o usuário está autenticado
+    if current_user.is_authenticated:
+        # Verifica se o usuário está suspenso (is_active_user == False)
+        if not current_user.is_active_user:
+            # Desconecta o usuário suspenso
+            logout_user()
+            # Exibe uma mensagem de conta suspensa
+            flash('Sua conta está suspensa. Entre em contato com o administrador.', 'alert-danger')
+            # Redireciona o usuário para a página de login
+            return redirect(url_for('main.login'))
 
 # Registrar as blueprints
 from adminflask.main.routes import main

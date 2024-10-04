@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from adminflask.forms import AdminLogin, EditUserForm, ConfirmDeleteForm, CreateUserForm, AdminProfileForm, CursoForm, PostForm
-from adminflask.models import Category, Usuario, Curso, Post
-from adminflask import db, bcrypt, loginmanager
-from adminflask.admin.utils import admin_required, salvar_foto_perfil
-admin = Blueprint('admin', __name__)
+from adminflask.models import Category, Usuario, Curso, Post, LogAcao, Mensagem
+from adminflask import db, bcrypt, loginmanager, socketio
+from adminflask.admin.utils import admin_required, registrar_log, salvar_foto_perfil
+from flask_socketio import emit, join_room
 
+admin = Blueprint('admin', __name__)
 
 # Página de login para admin
 @admin.route('/', methods=['GET', 'POST'])
@@ -74,6 +75,13 @@ def admin_profile():
 
     return render_template('admin/profile.html', form=form)
 
+@admin.route('/logs')
+@admin_required
+def ver_logs():
+    logs = LogAcao.query.order_by(LogAcao.data_acao.desc()).all()  # Ordena por data mais recente
+    return render_template('admin/ver_logs.html', logs=logs)
+
+
 # Users
 # Associa a rota '/users' ao blueprint 'admin'
 @admin.route('/users')
@@ -105,12 +113,25 @@ def admin_users():
 @admin_required
 def toggle_user_active(user_id):
     user = Usuario.query.get_or_404(user_id)
-    user.is_active_user = not user.is_active_user
+    user.is_active_user = not user.is_active_user  # Alterna o status de ativo/suspenso
     db.session.commit()
-    status = 'ativado' if user.is_active_user else 'suspenso'
-    flash(f'Usuário {user.nome} foi {status} com sucesso.', 'success')
-    return redirect(url_for('admin.admin_users'))
 
+    # Determina a ação realizada
+    acao = 'reativar' if user.is_active_user else 'suspender'
+    descricao = f'Usuário {user.nome} foi {acao}.'
+    
+    # Registrar a ação no log
+    registrar_log(usuario_id=current_user.id, 
+        entidade='usuario', 
+        entidade_id=user.id, 
+        acao=acao, 
+        descricao=descricao
+    )
+
+    # Mensagem de confirmação
+    status = 'ativado' if user.is_active_user else 'suspenso'
+    flash(f'Usuário {user.nome} foi {status} com sucesso.', 'alert-success')
+    return redirect(url_for('admin.admin_users'))
 
 @admin.route('/users/new', methods=['GET', 'POST'])
 @admin_required
@@ -187,6 +208,14 @@ def delete_user(user_id):
         return redirect(url_for('admin.admin_users'))
 
     if form.validate_on_submit() and form.confirmar.data:
+        # Registra a ação de exclusão no log
+        registrar_log(
+            usuario_id=current_user.id, 
+            entidade='usuario', 
+            entidade_id=user.id, 
+            acao='excluir', 
+            descricao='Usuário excluído'
+        )
         # Excluir os dados associados ao usuário (exemplo: posts)
         for post in user.posts:
             db.session.delete(post)
@@ -220,11 +249,20 @@ def editar_post(post_id):
     if post.usuario_id != current_user.id:
         flash('Você não tem permissão para editar este post.', 'alert-danger')
         return redirect(url_for('admin.admin_posts'))
-        
+
     form = PostForm()
      # Buscar todas as categorias do banco de dados
     form.category.choices = [(categoria.id, categoria.name) for categoria in Category.query.all()]
     if form.validate_on_submit():
+        # Registra a ação de edição no log
+        registrar_log(
+            usuario_id=current_user.id,
+            entidade='post',
+            entidade_id=post.id,
+            acao='editar',
+            descricao='Post editado'
+        )
+
         post.titulo = form.titulo.data
         post.conteudo = form.conteudo.data
         post.category_id = form.category.data
@@ -336,3 +374,34 @@ def deletar_curso(curso_id):
     flash(f'Curso "{curso.nome}" excluído com sucesso.', 'alert-success')
     return redirect(url_for('admin.admin_cursos'))
 
+# Chat
+# Rota para o chat do administrador
+@admin.route('/admin/chat')
+@admin_required
+def admin_chat():
+    mensagens = Mensagem.query.filter_by(sala='admin').all()  # Carrega as mensagens da sala 'admin'
+    return render_template('admin/admin_chat.html', mensagens=mensagens)
+
+# Quando o administrador envia ou recebe uma mensagem
+@socketio.on('mensagem_enviada')
+def handle_message(data):
+    sala = data['room']  # A sala é o ID do usuário ou 'admin'
+    mensagem = data['msg']
+    
+    # Verifica se o administrador está enviando a mensagem
+    if current_user.is_admin:
+        # Salva a mensagem no banco de dados
+        nova_mensagem = Mensagem(conteudo=mensagem, remetente_id=current_user.id, destinatario_id=int(sala), sala=sala)
+        db.session.add(nova_mensagem)
+        db.session.commit()
+
+        # Envia a mensagem para a sala do usuário
+        emit('mensagem_recebida', {'user': current_user.nome, 'msg': mensagem}, room=sala)
+    else:
+        # O usuário envia a mensagem ao administrador
+        nova_mensagem = Mensagem(conteudo=mensagem, remetente_id=current_user.id, destinatario_id=1, sala='admin')
+        db.session.add(nova_mensagem)
+        db.session.commit()
+
+        # Envia a mensagem para a sala do administrador
+        emit('mensagem_recebida', {'user': current_user.nome, 'msg': mensagem}, room='admin')

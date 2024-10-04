@@ -2,8 +2,9 @@ from flask import Blueprint, render_template, url_for, redirect, flash, request
 from flask_login import login_user, current_user, login_required, logout_user
 
 from adminflask.forms import FormCriarConta, FormLogin
-from adminflask.models import Usuario, Curso, Post
-from adminflask import db, bcrypt
+from adminflask.models import Usuario, Curso, Post, Mensagem
+from adminflask import db, bcrypt, socketio
+from flask_socketio import emit, join_room
 
 
 
@@ -19,6 +20,10 @@ def login():
     if form.validate_on_submit():
         usuario = Usuario.query.filter_by(email=form.email.data).first()
         if usuario and bcrypt.check_password_hash(usuario.senha, form.senha.data):
+            if not usuario.is_active_user:  # Verifica se a conta está suspensa
+                flash('Sua conta está suspensa. Entre em contato com o administrador.', 'alert-danger')
+                return redirect(url_for('main.login'))
+
             login_user(usuario, remember=True)
             flash('Login feito com sucesso', 'alert-success')
 
@@ -57,7 +62,7 @@ def criar_conta():
 def logout():
     logout_user()
     flash('Logout feito com sucesso', 'alert-success')
-    return redirect(url_for('main.homepage'))
+    return redirect(url_for('main.login'))
 
 @main.route('/termos-de-uso')
 def termos_de_uso():
@@ -95,3 +100,19 @@ def inscrever_curso(curso_id):
     else:
         flash(f'Você já está inscrito no curso "{curso.nome}".', 'alert-info')
     return redirect(url_for('main.ver_curso', curso_id=curso.id))
+
+
+# Chat
+@main.route('/chat')
+@login_required
+def chat():
+    mensagens = Mensagem.query.filter_by(sala=str(current_user.id)).all()  # Carrega as mensagens da sala do usuário
+    return render_template('user/chat.html', mensagens=mensagens)
+
+# Conectar um usuário a uma sala privada usando seu ID de usuário
+@socketio.on('entrar_sala')
+def entrar_sala():
+    sala = str(current_user.id)
+    join_room(sala)
+    emit('entrou_sala', {'msg': f'Você entrou na sala {sala}'}, room=sala)
+
