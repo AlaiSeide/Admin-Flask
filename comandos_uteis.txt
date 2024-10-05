@@ -9,3 +9,8 @@ Isso vai criar um arquivo chamado requirements.txt com todas as bibliotecas e ve
 Se você quiser instalar todas as bibliotecas listadas em um arquivo como o requirements.txt, pode usar o comando:
 
     - pip install -r requirements.txt
+
+pip install Flask-Migrate
+flask db init
+flask db migrate -m "Inicializando migrações"
+flask db upgrade

@@ -1,0 +1,62 @@
+Precisa executar o comando export FLASK_APP=adminflask toda vez que fechar e abrir o terminal
+   - export FLASK_APP=adminflask
+
+Comandos do flask_migrate e explicações super fáceis:
+
+1. flask db init
+   - O que faz: Cria uma pasta onde as mudanças do banco de dados vão ser guardadas.
+   - Explicação: É o primeiro comando que rodamos para dizer que vamos guardar as mudanças do banco de dados.
+
+2. flask db migrate -m "mensagem"
+   - O que faz: Cria um arquivo com as mudanças do banco de dados.
+   - Explicação: Quando você altera as coisas no seu banco de dados, esse comando cria um arquivo que explica essas mudanças.
+
+3. flask db upgrade
+   - O que faz: Aplica todas as mudanças no banco de dados.
+   - Explicação: Esse comando faz o banco de dados seguir as novas regras que você criou.
+
+4. flask db downgrade
+   - O que faz: Desfaz uma mudança no banco de dados.
+   - Explicação: Se você fez algo errado no banco de dados, esse comando desfaz essa mudança.
+
+5. flask db downgrade <versão>
+   - O que faz: Desfaz as mudanças até uma versão específica.
+   - Explicação: Você pode escolher até qual mudança deseja desfazer usando o número da versão.
+
+6. flask db stamp <versão>
+   - O que faz: Marca o banco de dados com uma versão sem fazer mudanças.
+   - Explicação: Isso só marca uma versão no banco de dados sem alterar nada de verdade.
+
+7. flask db current
+   - O que faz: Mostra qual é a versão atual do banco de dados.
+   - Explicação: Diz qual é a versão que o banco de dados está usando agora.
+
+8. flask db history
+   - O que faz: Mostra o histórico de todas as mudanças.
+   - Explicação: Lista todas as mudanças que você fez no banco de dados.
+
+9. flask db heads
+   - O que faz: Mostra as últimas mudanças que foram feitas.
+   - Explicação: Ele lista as últimas mudanças que foram aplicadas no banco de dados.
+
+10. flask db show <versão>
+    - O que faz: Mostra detalhes sobre uma versão específica de mudança.
+    - Explicação: Esse comando te mostra mais informações sobre uma mudança específica que você escolhe.
+
+11. flask db merge <revisões>
+    - O que faz: Junta várias mudanças em uma só.
+    - Explicação: Se você tem mudanças separadas, esse comando faz todas virarem uma só.
+
+12. flask db revision -m "mensagem"
+    - O que faz: Cria um arquivo de mudança, mas sem detectar automaticamente.
+    - Explicação: Você cria uma mudança manualmente com esse comando.
+
+13. flask db branches
+    - O que faz: Mostra todas as ramificações de mudanças.
+    - Explicação: Se você tem várias linhas de mudanças, esse comando mostra todas.
+
+14. flask db migrate --sql
+    - O que faz: Cria o SQL das mudanças sem aplicar no banco de dados.
+    - Explicação: Gera o código SQL que será rodado, mas não aplica ele.
+
+Esses comandos ajudam a organizar as mudanças do banco de dados no seu projeto Flask de forma simples e fácil!

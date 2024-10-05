@@ -2,7 +2,7 @@ from flask import Flask, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user, logout_user
-
+from flask_migrate import Migrate
 import os
 
 server = '192.168.178.4'
@@ -17,6 +17,7 @@ app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'images', 'p
 # app.config['UPLOAD_FOLDER'] = 'static/images'
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 loginmanager = LoginManager(app)
 loginmanager.login_message = 'Faça login para acessar esta página, por favor'

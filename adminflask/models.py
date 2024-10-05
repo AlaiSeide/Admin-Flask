@@ -17,6 +17,8 @@ class Usuario(db.Model, UserMixin):
 
     # Cada usuário tem um nome.
     nome = db.Column(db.String(150), nullable=False)
+     # Cada usuário tem um nome.
+    teste = db.Column(db.String(150), nullable=True)
 
     # Cada usuário tem um email único que ninguém mais pode ter.
     email = db.Column(db.String(150), unique=True, nullable=False)
