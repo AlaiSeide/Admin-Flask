@@ -2,7 +2,6 @@ from flask import Flask, request, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user, logout_user
-from flask_socketio import SocketIO  # Certifique-se de importar o SocketIO aqui
 
 import os
 
@@ -22,8 +21,6 @@ bcrypt = Bcrypt(app)
 loginmanager = LoginManager(app)
 loginmanager.login_message = 'Faça login para acessar esta página, por favor'
 loginmanager.login_message_category = 'alert-info'
-# Inicialize o SocketIO
-socketio = SocketIO(app)
 
 
 #Se o usuário não estiver autenticado e estiver tentando acessar a área de admin, o login_manager.login_view é configurado para admin.admin_login, redirecionando para a página de login de administradores.

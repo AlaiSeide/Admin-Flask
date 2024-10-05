@@ -2,9 +2,8 @@ from flask import Blueprint, render_template, url_for, redirect, flash, request
 from flask_login import login_user, current_user, login_required, logout_user
 
 from adminflask.forms import FormCriarConta, FormLogin
-from adminflask.models import Usuario, Curso, Post, Mensagem
-from adminflask import db, bcrypt, socketio
-from flask_socketio import emit, join_room
+from adminflask.models import Usuario, Curso, Post
+from adminflask import db, bcrypt
 
 
 
@@ -57,9 +56,13 @@ def criar_conta():
     return render_template('user/criar_conta.html', form=form)
 
 
-@main.route('/logout')
+
+@main.route('/logout', methods=['POST'])
 @login_required
 def logout():
+    """
+    A sessão é um local onde o Flask guarda informações temporárias sobre o usuário que está navegando no seu site. Quando o usuário faz login, os dados dele (como o ID ou nome de usuário) são armazenados na sessão, e isso é o que permite que o Flask saiba que o usuário está autenticado em várias páginas.
+    """
     logout_user()
     flash('Logout feito com sucesso', 'alert-success')
     return redirect(url_for('main.login'))
@@ -100,19 +103,4 @@ def inscrever_curso(curso_id):
     else:
         flash(f'Você já está inscrito no curso "{curso.nome}".', 'alert-info')
     return redirect(url_for('main.ver_curso', curso_id=curso.id))
-
-
-# Chat
-@main.route('/chat')
-@login_required
-def chat():
-    mensagens = Mensagem.query.filter_by(sala=str(current_user.id)).all()  # Carrega as mensagens da sala do usuário
-    return render_template('user/chat.html', mensagens=mensagens)
-
-# Conectar um usuário a uma sala privada usando seu ID de usuário
-@socketio.on('entrar_sala')
-def entrar_sala():
-    sala = str(current_user.id)
-    join_room(sala)
-    emit('entrou_sala', {'msg': f'Você entrou na sala {sala}'}, room=sala)
 

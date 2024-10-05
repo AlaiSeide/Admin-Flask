@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, flash
 from flask_login import login_required, current_user, login_user, logout_user
 from adminflask.forms import AdminLogin, EditUserForm, ConfirmDeleteForm, CreateUserForm, AdminProfileForm, CursoForm, PostForm
-from adminflask.models import Category, Usuario, Curso, Post, LogAcao, Mensagem
-from adminflask import db, bcrypt, loginmanager, socketio
+from adminflask.models import Category, Usuario, Curso, Post, LogAcao
+from adminflask import db, bcrypt, loginmanager
 from adminflask.admin.utils import admin_required, registrar_log, salvar_foto_perfil
-from flask_socketio import emit, join_room
+
 
 admin = Blueprint('admin', __name__)
 
@@ -373,35 +373,3 @@ def deletar_curso(curso_id):
     db.session.commit()
     flash(f'Curso "{curso.nome}" excluído com sucesso.', 'alert-success')
     return redirect(url_for('admin.admin_cursos'))
-
-# Chat
-# Rota para o chat do administrador
-@admin.route('/admin/chat')
-@admin_required
-def admin_chat():
-    mensagens = Mensagem.query.filter_by(sala='admin').all()  # Carrega as mensagens da sala 'admin'
-    return render_template('admin/admin_chat.html', mensagens=mensagens)
-
-# Quando o administrador envia ou recebe uma mensagem
-@socketio.on('mensagem_enviada')
-def handle_message(data):
-    sala = data['room']  # A sala é o ID do usuário ou 'admin'
-    mensagem = data['msg']
-    
-    # Verifica se o administrador está enviando a mensagem
-    if current_user.is_admin:
-        # Salva a mensagem no banco de dados
-        nova_mensagem = Mensagem(conteudo=mensagem, remetente_id=current_user.id, destinatario_id=int(sala), sala=sala)
-        db.session.add(nova_mensagem)
-        db.session.commit()
-
-        # Envia a mensagem para a sala do usuário
-        emit('mensagem_recebida', {'user': current_user.nome, 'msg': mensagem}, room=sala)
-    else:
-        # O usuário envia a mensagem ao administrador
-        nova_mensagem = Mensagem(conteudo=mensagem, remetente_id=current_user.id, destinatario_id=1, sala='admin')
-        db.session.add(nova_mensagem)
-        db.session.commit()
-
-        # Envia a mensagem para a sala do administrador
-        emit('mensagem_recebida', {'user': current_user.nome, 'msg': mensagem}, room='admin')

@@ -50,19 +50,6 @@ class LogAcao(db.Model):
     def __repr__(self):
         return f'<LogAcao {self.id} - Usuário {self.usuario_id} - {self.acao} {self.entidade} {self.entidade_id}>'
 
-
-class Mensagem(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    conteudo = db.Column(db.Text, nullable=False)  # Conteúdo da mensagem
-    data_envio = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Data de envio
-    remetente_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)  # ID de quem enviou (admin ou usuário)
-    destinatario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)  # ID de quem recebeu a mensagem (admin ou usuário)
-    sala = db.Column(db.String(100), nullable=False)  # Sala da mensagem, com base no ID do usuário ou 'admin'
-
-    remetente = db.relationship('Usuario', foreign_keys=[remetente_id])  # Relacionamento com o usuário remetente
-    destinatario = db.relationship('Usuario', foreign_keys=[destinatario_id])  # Relacionamento com o usuário destinatário
-
-
 class Category(db.Model):
     __tablename__ = 'categories'
     

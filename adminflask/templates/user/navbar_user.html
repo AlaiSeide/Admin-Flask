@@ -42,18 +42,16 @@
                     </a>
                 </li>
 
-                <!-- Adicionar Post -->
+                <!-- Logout -->
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.logout') }}">
-                        <i class="bi bi-box-arrow-right"></i> Logout
-                    </a>
+                    <form method="POST" action="{{ url_for('main.logout') }}">
+                        <button type="submit" class="nav-link btn btn-link" style="color: inherit; padding: 0; display: flex; align-items: center;">
+                            <i class="bi bi-box-arrow-right" style="font-size: 1.5rem;"></i>
+                            <span style="margin-left: 5px;">Logout</span>
+                        </button>
+                    </form>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('main.chat') }}">
-                        <i class="bi bi-chat-dots" id="icone-mensagem-usuario"></i>
-                        <span class="badge bg-danger" id="notificacao-mensagem-usuario" style="display:none;">Nova</span>
-                    </a>
-                </li>
+                
                 <!-- Perfil do Usuário -->
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userProfileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
