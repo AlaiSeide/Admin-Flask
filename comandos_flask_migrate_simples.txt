@@ -1,4 +1,4 @@
-Precisa executar o comando export FLASK_APP=adminflask toda vez que fechar e abrir o terminal
+0. Precisa executar o comando export FLASK_APP=adminflask toda vez que fechar e abrir o terminal
    - export FLASK_APP=adminflask
 
 Comandos do flask_migrate e explicações super fáceis:
