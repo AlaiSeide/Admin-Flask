@@ -1,0 +1,51 @@
+
+Explicação sobre como configurar o Flask com o arquivo .env:
+
+1. **Problema**:
+   - Você estava tendo que executar o comando `export FLASK_APP=adminflask` toda vez que abria o terminal.
+   - Isso acontecia porque as variáveis de ambiente definidas no terminal não são persistentes, ou seja, elas "somem" quando você fecha o terminal.
+
+2. **Solução com o arquivo .env**:
+   - Para evitar ter que rodar o comando sempre, criamos um arquivo chamado `.env` que contém as variáveis de ambiente.
+   - O Flask consegue ler essas variáveis automaticamente se a biblioteca `python-dotenv` estiver instalada.
+
+3. **Passo a Passo para resolver**:
+
+   1. **Instalar a biblioteca `python-dotenv`**:
+      - Se o Flask não estiver carregando automaticamente o arquivo `.env`, você precisa da biblioteca `python-dotenv`. 
+      - Execute o comando:
+        ```bash
+        pip install python-dotenv
+        ```
+
+   2. **Criar o arquivo `.env` no diretório do seu projeto**:
+      - No mesmo diretório onde está o arquivo principal do Flask (como `app.py` ou `run.py`), crie o arquivo `.env`.
+      - O conteúdo do arquivo `.env` deve ser:
+        ```bash
+        FLASK_APP=adminflask
+        ```
+
+   3. **Carregar manualmente o `.env` (opcional)**:
+      - Se o Flask não estiver lendo o `.env` automaticamente, você pode forçar o carregamento manualmente no código do Flask.
+      - Adicione o seguinte código no início do arquivo principal (`app.py` ou `run.py`):
+        ```python
+        from dotenv import load_dotenv
+        import os
+
+        load_dotenv()
+        print(os.getenv('FLASK_APP'))  # Verifique se o 'adminflask' foi carregado
+        ```
+
+   4. **Testar o arquivo `.env`**:
+      - No terminal, vá até o diretório do seu projeto e rode o seguinte comando para verificar se o arquivo `.env` está correto:
+        ```bash
+        cat .env
+        ```
+      - O conteúdo deve ser exibido como:
+        ```bash
+        FLASK_APP=adminflask
+        ```
+
+4. **Conclusão**:
+   - O problema estava no local incorreto do arquivo `.env`. Ao mover para o diretório correto e garantir que a biblioteca `python-dotenv` estava instalada, o Flask conseguiu carregar automaticamente a variável de ambiente.
+   - Agora, você não precisa mais rodar `export FLASK_APP=adminflask` manualmente!
