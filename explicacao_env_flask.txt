@@ -1,4 +1,4 @@
-
+pip install python-dotenv
 Explicação sobre como configurar o Flask com o arquivo .env:
 
 1. **Problema**:
