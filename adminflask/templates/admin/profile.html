@@ -1,69 +1,74 @@
 {% extends "admin/base_admin.html" %}
 
+{% block head %}
+    <link href="{{ url_for('static', filename='css/profileadmin.css') }}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white text-center">
-                    <h2 class="mb-0">Meu Perfil</h2>
-                </div>
-                <div class="card-body p-4">
-                    <!-- Exibir foto de perfil atual -->
-                    <div class="text-center mb-4">
-                        <img src="{{ url_for('static', filename='images/perfis/' + current_user.foto_perfil) }}" alt="Foto de Perfil" class="rounded-circle img-thumbnail" width="150" height="150">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h2 class="mb-0">Meu Perfil</h2>
                     </div>
-                    <!-- Formulário de edição de perfil -->
-                    <form method="POST" action="" enctype="multipart/form-data">
-                        {{ form.csrf_token }}
+                    <div class="card-body p-4">
+                        <!-- Exibir foto de perfil atual -->
+                        <div class="text-center mb-4">
+                            <img src="{{ url_for('static', filename='images/perfis/' + current_user.foto_perfil) }}" alt="Foto de Perfil" class="rounded-circle img-thumbnail" width="150" height="150">
+                        </div>
+                        <!-- Formulário de edição de perfil -->
+                        <form method="POST" action="" enctype="multipart/form-data">
+                            {{ form.csrf_token }}
 
-                        <!-- Campo Nome -->
-                        <div class="mb-3">
-                            {{ form.nome.label(class="form-label") }}
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                {{ form.nome(class="form-control") }}
+                            <!-- Campo Nome -->
+                            <div class="mb-3">
+                                {{ form.nome.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                    {{ form.nome(class="form-control") }}
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Campo Email -->
-                        <div class="mb-3">
-                            {{ form.email.label(class="form-label") }}
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
-                                {{ form.email(class="form-control") }}
+                            <!-- Campo Email -->
+                            <div class="mb-3">
+                                {{ form.email.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                                    {{ form.email(class="form-control") }}
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Campo Senha (opcional) -->
-                        <div class="mb-3">
-                            {{ form.senha.label(class="form-label") }}
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                {{ form.senha(class="form-control", placeholder="Deixe em branco para não alterar a senha") }}
+                            <!-- Campo Senha (opcional) -->
+                            <div class="mb-3">
+                                {{ form.senha.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    {{ form.senha(class="form-control", placeholder="Deixe em branco para não alterar a senha") }}
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Campo Upload de Foto de Perfil -->
-                        <div class="mb-3">
-                            {{ form.foto_perfil.label(class="form-label") }}
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-upload"></i></span>
-                                {{ form.foto_perfil(class="form-control") }}
+                            <!-- Campo Upload de Foto de Perfil -->
+                            <div class="mb-3">
+                                {{ form.foto_perfil.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-upload"></i></span>
+                                    {{ form.foto_perfil(class="form-control") }}
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Botão de Envio -->
-                        <div class="d-grid">
-                            {{ form.submit(class="btn btn-primary btn-lg") }}
-                        </div>
-                    </form>
+                            <!-- Botão de Envio -->
+                            <div class="d-grid">
+                                {{ form.submit(class="btn btn-primary btn-lg") }}
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
+    {% include 'admin/account_setting_or_edit_profile.html' %}
 
 {% endblock %}

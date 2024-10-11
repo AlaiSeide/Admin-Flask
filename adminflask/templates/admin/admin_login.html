@@ -5,38 +5,40 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-center vh-100">
-  <div class="login-container">
-    <div class="card">
-      <div class="card-body">
-        <h3 class="text-center mb-4">Admin</h3>
+<div class="bg-light d-flex align-items-center justify-content-center" style="height: 100vh;">
+  <div class="card p-4 border-0" style="max-width: 400px; width: 100%;">
+  <h2 class="text-center mb-4">Admin Login</h2>
 
-        <form action="{{ url_for('admin.admin_login', next_admin=request.args.get('next_admin')) }}" method="POST">
-          {{ form.csrf_token }}
+    <form action="{{ url_for('admin.admin_login', next_admin=request.args.get('next_admin')) }}" method="POST">
+      {{ form.csrf_token }}
 
-          <!--Email-->
-          <div data-mdb-input-init class="form-outline mb-4">
-              {{ form.email(class="form-control", placeholder="Seu email") }}
-              {{ form.email.label(class="form-label" ) }}
-          </div>
-
-           <!--Senha-->
-          <div data-mdb-input-init class="form-outline mb-4">
-              {{ macros.campo_senha(form.senha) }}
-          </div>
-
-           <!--Btn-->
-          <div class="pt-1 mb-4">
-            {{ form.botao_fazer_login(class="btn btn-dark btn-lg btn-block") }}
-          </div>
-
-        </form>
-
+      <!--Email-->
+      <div class="mb-3">
+          {{ form.email.label(class="form-label" ) }}
+          {{ form.email(class="form-control", placeholder="admin@example.com") }}
+          
       </div>
-    </div>
+
+        <!--Senha-->
+      <div class="mb-3">
+          {{ macros.campo_senha(form.senha) }}
+      </div>
+
+
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="remember">
+        <label class="form-check-label" for="remember">Lembrar-me</label>
+      </div>
+
+        <!--Btn-->
+      <div class="pt-1 mb-4">
+        {{ form.botao_fazer_login(class="btn btn-primary w-100") }}
+      </div>
+
+    </form>
+
   </div>
 </div>
-
 {% endblock %}
 
 
