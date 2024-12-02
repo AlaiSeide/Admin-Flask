@@ -26,7 +26,7 @@ def salvar_foto_perfil(foto):
     """Função para salvar a imagem de perfil com um nome único."""
     # Gera um nome de arquivo aleatório
     nome_aleatorio = secrets.token_hex(8)
-    _, extensao_arquivo = os.path.splitext(secure_filename(foto.filename))
+    _ , extensao_arquivo = os.path.splitext(secure_filename(foto.filename))
     nome_arquivo = nome_aleatorio + extensao_arquivo
 
     caminho_foto = os.path.join(app.config['UPLOAD_FOLDER'], nome_arquivo)

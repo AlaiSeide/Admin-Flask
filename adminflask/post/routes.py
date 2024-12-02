@@ -14,6 +14,7 @@ def ver_posts():
     # Passa os posts para o template
     return render_template('post/ver_posts.html', posts=posts)
 
+
 @post.route('/posts/adicionar', methods=['GET', 'POST'])
 @login_required
 def adicionar_post():

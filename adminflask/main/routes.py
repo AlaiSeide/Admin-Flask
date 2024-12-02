@@ -55,8 +55,6 @@ def criar_conta():
         return redirect(url_for('main.login'))
     return render_template('user/criar_conta.html', form=form)
 
-
-
 @main.route('/logout', methods=['POST'])
 @login_required
 def logout():
@@ -82,8 +80,6 @@ def homepage():
     curso = Curso.query.all()
     post = Post.query.all()
     return render_template('user/homepage.html', cursos=curso, posts=post)
-
-
 
 # cursos
 @main.route('/cursos')
